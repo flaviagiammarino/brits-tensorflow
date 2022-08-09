@@ -25,14 +25,14 @@ class FeatureRegression(tf.keras.layers.Layer):
         Parameters:
         __________________________________
         inputs: tf.Tensor.
-            Complement vector, tensor with shape (samples, features) where samples is the
-            batch size and features is the number of time series.
+            Complement vector at a given time step, tensor with shape (samples, features)
+            where samples is the batch size and features is the number of time series.
 
         Returns:
         __________________________________
         tf.Tensor.
-            Feature-based estimation, tensor with shape (samples, features) where samples
-            is the batch size and features is the number of time series.
+            Feature-based estimation at a given time step, tensor with shape (samples, features)
+            where samples is the batch size and features is the number of time series.
         '''
         
         return tf.matmul(inputs, self.w * self.d) + self.b
@@ -64,14 +64,14 @@ class TemporalDecay(tf.keras.layers.Layer):
         Parameters:
         __________________________________
         inputs: tf.Tensor.
-            Time gaps, tensor with shape (samples, features) where samples is the
-            batch size and features is the number of time series.
+            Time gaps at a given time step, tensor with shape (samples, features) where samples
+            is the batch size and features is the number of time series.
 
         Returns:
         __________________________________
         tf.Tensor.
-            Temporal decay, tensor with shape (samples, units) where samples is the
-            batch size and units is the number of hidden units of the recurrent layer.
+            Temporal decay at a given time step, tensor with shape (samples, units) where samples
+            is the batch size and units is the number of hidden units of the recurrent layer.
         '''
         
         return tf.exp(- tf.nn.relu(tf.matmul(inputs, self.w) + self.b))
@@ -121,19 +121,18 @@ class RITS(tf.keras.layers.Layer):
         Parameters:
         __________________________________
         inputs: tf.Tensor.
-            Model inputs, tensor with shape (samples, timesteps, features, 3) where samples is the
-            batch size, timesteps is the number of time steps, features is the number of time series
-            and 3 is the number of model inputs (time series, masking vectors and time gaps).
+            Model inputs (time series, masking vectors and time gaps), tensor with shape (samples, timesteps, features, 3)
+            where samples is the batch size, timesteps is the number of time steps, features is the number of time series
+            and 3 is the number of model inputs.
 
         Returns:
         __________________________________
         outputs: tf.Tensor.
-            Imputations, tensor with shape (samples, timesteps, features) where samples is the
-            batch size, timesteps is the number of time steps and features is the number of
-            time series.
+            Model outputs (imputations), tensor with shape (samples, timesteps, features) where samples is the batch size,
+            timesteps is the number of time steps and features is the number of time series.
         
         loss: tf.Tensor.
-            Loss value, scalar tensor.
+            Loss value (sum of mean absolute errors), scalar tensor.
         '''
         
         # Get the inputs (time series, masking vectors and time gaps).
@@ -182,17 +181,17 @@ class RITS(tf.keras.layers.Layer):
             # Combine the history-based and feature-based estimation, see Equation (9) in Section 4.3 of the BRITS paper.
             c_h = beta * z_h + (1 - beta) * x_h
 
-            # Update the loss.
+            # Update the loss, see the last equation in Section 4.3 of the BRITS paper.
             loss += tf.reduce_sum((tf.abs(x - x_h) * m) / (tf.reduce_sum(m) + 1e-5))
             loss += tf.reduce_sum((tf.abs(x - z_h) * m) / (tf.reduce_sum(m) + 1e-5))
             loss += tf.reduce_sum((tf.abs(x - c_h) * m) / (tf.reduce_sum(m) + 1e-5))
             
-            # Update the outputs.
+            # Update the outputs, see Equation (10) in Section 4.3 of the BRITS paper.
             c_c = m * x + (1 - m) * c_h
             outputs = outputs.write(index=t, value=c_c)
             
-            # Update the states.
-            h, [h, c] = self.rnn_cell(inputs=tf.concat([c_c, m], axis=-1), states=[h * gamma, c])
+            # Update the states, see Equation (11) in Section 4.3 of the BRITS paper.
+            h, [h, c] = self.rnn_cell(states=[h * gamma, c], inputs=tf.concat([c_c, m], axis=-1))
 
         # Reshape the outputs.
         outputs = tf.transpose(outputs.stack(), [1, 0, 2])

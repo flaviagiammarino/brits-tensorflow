@@ -163,7 +163,7 @@ class BRITS:
                 imputations = pd.concat([imputations, pd.DataFrame(outputs[i, :, :])], axis=0, ignore_index=True)
             imputations = self.x_min + (self.x_max - self.x_min) * imputations
 
-            # Save the imputations.
+            # Save the data frame.
             self.imputations = imputations
     
             return imputations
@@ -184,7 +184,7 @@ class BRITS:
 def build_fn(timesteps, features, units):
     
     '''
-    Build the model.
+    Build the model, see Section 4.2 of the BRITS paper.
     
     Parameters:
     __________________________________
@@ -208,10 +208,10 @@ def build_fn(timesteps, features, units):
     # Get the imputations and loss in the backward directions.
     backward_imputations, backward_loss = RITS(units=units)(inputs[:, :, :, 3:])
     
-    # Average the imputations, see Section 4.2 of the BRITS paper.
+    # Average the imputations across both directions (forward and backward).
     outputs = (forward_imputations + backward_imputations) / 2
 
-    # Sum the losses, see Section 4.2 of the BRITS paper.
+    # Sum the losses (forward loss, backward loss and consistency loss).
     loss = forward_loss + backward_loss + tf.reduce_mean(tf.abs(forward_imputations - backward_imputations))
     
     return tf.keras.Model(inputs, (outputs, loss))
