@@ -71,7 +71,7 @@ class TemporalDecay(tf.keras.layers.Layer):
         __________________________________
         tf.Tensor.
             Temporal decay, tensor with shape (samples, units) where samples is the
-            batch size and units is the number of hidden units of the LSTM cell.
+            batch size and units is the number of hidden units of the recurrent layer.
         '''
         
         return tf.exp(- tf.nn.relu(tf.matmul(inputs, self.w) + self.b))

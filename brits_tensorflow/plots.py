@@ -17,8 +17,8 @@ def plot(actual, imputations):
     Returns:
     __________________________________
     fig: go.Figure.
-        Line chart of actual and imputed time series,
-        one subplot for each time series.
+        Plots of actual and imputed time series,
+        two subplots for each time series.
     '''
     
     if actual.shape[1] == imputations.shape[1]:
@@ -86,6 +86,7 @@ def plot(actual, imputations):
         
         fig.update_xaxes(
             title='Time',
+            range=[actual.index.min(), actual.index.max()],
             color='#000000',
             tickfont=dict(
                 color='#3a3a3a',
@@ -96,7 +97,21 @@ def plot(actual, imputations):
             row=i + 1,
             col=1
         )
-
+        
+        fig.update_xaxes(
+            title='Time',
+            range=[imputations.index.min(), imputations.index.max()],
+            color='#000000',
+            tickfont=dict(
+                color='#3a3a3a',
+            ),
+            linecolor='#d9d9d9',
+            mirror=True,
+            showgrid=False,
+            row=i + 1,
+            col=2
+        )
+        
         fig.update_yaxes(
             title='Value',
             color='#000000',
@@ -109,19 +124,6 @@ def plot(actual, imputations):
             zeroline=False,
             row=i + 1,
             col=1
-        )
-        
-        fig.update_xaxes(
-            title='Time',
-            color='#000000',
-            tickfont=dict(
-                color='#3a3a3a',
-            ),
-            linecolor='#d9d9d9',
-            mirror=True,
-            showgrid=False,
-            row=i + 1,
-            col=2
         )
 
         fig.update_yaxes(
