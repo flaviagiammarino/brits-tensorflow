@@ -150,7 +150,7 @@ class BRITS:
                 targets=None,
                 sequence_length=self.timesteps,
                 sequence_stride=self.timesteps,
-                batch_size=1,
+                batch_size=x.shape[0],
                 shuffle=False
             )
             
