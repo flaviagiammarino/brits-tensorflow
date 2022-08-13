@@ -47,8 +47,10 @@ model.fit(
     verbose=True
 )
 
-# Plot the imputations
+# Impute the missing values
 imputations = model.predict(x=x)
+
+# Plot the imputations
 fig = model.plot_imputations()
 fig.write_image('imputations.png', width=1000, height=650)
 ```
