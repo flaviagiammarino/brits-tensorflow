@@ -1,7 +1,7 @@
 import numpy as np
 from brits_tensorflow.model import BRITS
 
-# Generate two time series
+# Generate some time series
 N = 2000
 t = np.linspace(0, 1, N)
 e = np.random.multivariate_normal(mean=np.zeros(2), cov=np.eye(2), size=N)
@@ -10,9 +10,11 @@ b = 60 + 30 * np.cos(2 * np.pi * (20 * t - 0.5)) + e[:, 1]
 x = np.hstack([a.reshape(- 1, 1), b.reshape(- 1, 1)])
 
 # Add some missing values
-x[np.random.randint(low=0, high=N, size=int(0.3 * N)), 0] = np.nan
-x[np.random.randint(low=0, high=N, size=int(0.3 * N)), 1] = np.nan
-
+for i in range(10):
+    a = np.random.randint(low=200, high=N - 200)
+    b = np.random.randint(low=5, high=50)
+    x[a: a + b, :] = np.nan
+    
 # Fit the model
 model = BRITS(
     x=x,
@@ -32,4 +34,4 @@ imputations = model.predict(x=x)
 
 # Plot the imputations
 fig = model.plot_imputations()
-fig.write_image('imputations.png', width=1000, height=650)
+fig.write_image('imputations.png', width=700, height=800)
