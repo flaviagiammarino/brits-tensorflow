@@ -1,7 +1,7 @@
 import numpy as np
 from brits_tensorflow.model import BRITS
 
-# Generate some time series
+# Generate two time series
 N = 2000
 t = np.linspace(0, 1, N)
 e = np.random.multivariate_normal(mean=np.zeros(2), cov=np.eye(2), size=N)
@@ -11,9 +11,10 @@ x = np.hstack([a.reshape(- 1, 1), b.reshape(- 1, 1)])
 
 # Add some missing values
 for i in range(10):
-    a = np.random.randint(low=200, high=N - 200)
-    b = np.random.randint(low=5, high=50)
-    x[a: a + b, :] = np.nan
+    a = np.random.randint(low=200, high=N - 200, size=2)
+    b = np.random.randint(low=5, high=50, size=2)
+    for j in range(2):
+        x[a[j]: a[j] + b[j], j] = np.nan
     
 # Fit the model
 model = BRITS(
