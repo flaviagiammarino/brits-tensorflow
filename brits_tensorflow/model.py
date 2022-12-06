@@ -92,13 +92,13 @@ class BRITS:
                 # Calculate the loss.
                 _, loss = model(data)
             
-                # Calculate the gradient.
-                gradient = tape.gradient(loss, model.trainable_variables)
-            
-                # Update the weights.
-                optimizer.apply_gradients(zip(gradient, model.trainable_variables))
-            
-                return loss
+            # Calculate the gradient.
+            gradient = tape.gradient(loss, model.trainable_variables)
+        
+            # Update the weights.
+            optimizer.apply_gradients(zip(gradient, model.trainable_variables))
+        
+            return loss
 
         # Train the model.
         for epoch in range(epochs):
