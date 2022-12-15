@@ -1,18 +1,18 @@
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-def plot(actual, imputations):
+def plot(actual, imputed):
 
     '''
     Plot the actual and imputed the time series.
 
     Parameters:
     __________________________________
-    actual: pd.DataFrame.
-        Data frame with actual time series.
+    actual: np.array.
+        Actual time series.
 
-    imputations: pd.DataFrame.
-        Data frame with imputed time series.
+    imputed: np.array.
+        Imputed time series.
 
     Returns:
     __________________________________
@@ -21,14 +21,14 @@ def plot(actual, imputations):
         two subplots for each time series.
     '''
     
-    if actual.shape[1] == imputations.shape[1]:
+    if actual.shape[1] == imputed.shape[1]:
         features = actual.shape[1]
     else:
-        raise ValueError(f'Expected {actual.shape[1]} features, found {imputations.shape[1]}.')
+        raise ValueError(f'Expected {actual.shape[1]} features, found {imputed.shape[1]}.')
 
     fig = make_subplots(
         subplot_titles=['Feature ' + str(i + 1) + ' ' + s for i in range(features) for s in ['(Actual)', '(Imputed)']],
-        vertical_spacing=0.1,
+        vertical_spacing=0.125,
         rows=2 * features,
         cols=1
     )
@@ -36,16 +36,27 @@ def plot(actual, imputations):
     fig.update_layout(
         plot_bgcolor='white',
         paper_bgcolor='white',
-        margin=dict(t=40, b=10, l=10, r=10),
+        margin=dict(t=60, b=60, l=30, r=30),
         font=dict(
-            color='#000000',
-            size=10,
+            color='#1b1f24',
+            size=8,
+        ),
+        legend=dict(
+            traceorder='normal',
+            font=dict(
+                color='#1b1f24',
+                size=10,
+            ),
+            x=0,
+            y=-0.1,
+            orientation='h'
         ),
     )
 
     fig.update_annotations(
         font=dict(
-            size=13
+            color='#1b1f24',
+            size=12,
         )
     )
     
@@ -55,13 +66,12 @@ def plot(actual, imputations):
         
         fig.add_trace(
             go.Scatter(
-                x=actual.index,
-                y=actual.iloc[:, i],
+                y=actual[:, i],
                 showlegend=False,
                 mode='lines',
                 connectgaps=False,
                 line=dict(
-                    color='#b3b3b3',
+                    color='#afb8c1',
                     width=1
                 )
             ),
@@ -71,12 +81,12 @@ def plot(actual, imputations):
         
         fig.update_xaxes(
             title='Time',
-            range=[actual.index.min(), actual.index.max()],
-            color='#000000',
+            color='#424a53',
             tickfont=dict(
-                color='#3a3a3a',
+                color='#6e7781',
+                size=6,
             ),
-            linecolor='#d9d9d9',
+            linecolor='#eaeef2',
             mirror=True,
             showgrid=False,
             row=rows[0],
@@ -85,11 +95,12 @@ def plot(actual, imputations):
 
         fig.update_yaxes(
             title='Value',
-            color='#000000',
+            color='#424a53',
             tickfont=dict(
-                color='#3a3a3a',
+                color='#6e7781',
+                size=6,
             ),
-            linecolor='#d9d9d9',
+            linecolor='#eaeef2',
             mirror=True,
             showgrid=False,
             zeroline=False,
@@ -99,13 +110,12 @@ def plot(actual, imputations):
 
         fig.add_trace(
             go.Scatter(
-                x=imputations.index,
-                y=imputations.iloc[:, i],
+                y=imputed[:, i],
                 showlegend=False,
                 mode='lines',
                 line=dict(
                     width=1,
-                    color='#0550ae',
+                    color='#0969da',
                 ),
             ),
             row=rows[1],
@@ -114,12 +124,12 @@ def plot(actual, imputations):
         
         fig.update_xaxes(
             title='Time',
-            range=[imputations.index.min(), imputations.index.max()],
-            color='#000000',
+            color='#424a53',
             tickfont=dict(
-                color='#3a3a3a',
+                color='#6e7781',
+                size=6,
             ),
-            linecolor='#d9d9d9',
+            linecolor='#eaeef2',
             mirror=True,
             showgrid=False,
             row=rows[1],
@@ -128,11 +138,12 @@ def plot(actual, imputations):
         
         fig.update_yaxes(
             title='Value',
-            color='#000000',
+            color='#424a53',
             tickfont=dict(
-                color='#3a3a3a',
+                color='#6e7781',
+                size=6,
             ),
-            linecolor='#d9d9d9',
+            linecolor='#eaeef2',
             mirror=True,
             showgrid=False,
             zeroline=False,

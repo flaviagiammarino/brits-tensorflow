@@ -1,7 +1,9 @@
 import numpy as np
-from brits_tensorflow.model import BRITS
 
-# Generate two time series
+from brits_tensorflow.model import BRITS
+from brits_tensorflow.plots import plot
+
+# Generate some time series
 N = 2000
 t = np.linspace(0, 1, N)
 e = np.random.multivariate_normal(mean=np.zeros(2), cov=np.eye(2), size=N)
@@ -31,8 +33,9 @@ model.fit(
 )
 
 # Impute the missing values
-imputations = model.predict(x=x)
+x_hat = model.impute(x=x)
 
 # Plot the imputations
-fig = model.plot_imputations()
-fig.write_image('imputations.png', width=700, height=800)
+fig = plot(actual=x, imputed=x_hat)
+fig.write_image('results.png', scale=4, height=900, width=700)
+

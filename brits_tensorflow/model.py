@@ -4,7 +4,6 @@ import tensorflow as tf
 
 from brits_tensorflow.utils import get_inputs
 from brits_tensorflow.modules import RITS
-from brits_tensorflow.plots import plot
 
 class BRITS:
     
@@ -110,7 +109,7 @@ class BRITS:
         # Save the model.
         self.model = model
     
-    def predict(self, x):
+    def impute(self, x):
         
         '''
         Impute the time series.
@@ -123,7 +122,7 @@ class BRITS:
             
         Returns:
         __________________________________
-        imputations: pd.DataFrame.
+        imputed: pd.DataFrame.
             Data frame with imputed time series.
         '''
         
@@ -131,9 +130,6 @@ class BRITS:
             raise ValueError(f'Expected {self.features} features, found {x.shape[1]}.')
         
         else:
-    
-            # Save the time series.
-            self.actual = pd.DataFrame(x)
             
             # Scale the time series.
             x = (x - self.x_min) / (self.x_max - self.x_min)
@@ -155,30 +151,11 @@ class BRITS:
             )
             
             # Generate the imputations.
-            outputs = tf.concat([self.model(data)[0] for data in dataset], axis=0).numpy()
-    
-            # Organize the imputations in a data frame.
-            imputations = pd.DataFrame()
-            for i in range(outputs.shape[0]):
-                imputations = pd.concat([imputations, pd.DataFrame(outputs[i, :, :])], axis=0, ignore_index=True)
-            imputations = self.x_min + (self.x_max - self.x_min) * imputations
+            imputed = tf.concat([self.model(data)[0] for data in dataset], axis=0).numpy()
+            imputed = np.concatenate([imputed[i, :, :] for i in range(imputed.shape[0])], axis=0)
+            imputed = self.x_min + (self.x_max - self.x_min) * imputed
 
-            # Save the data frame.
-            self.imputations = imputations
-    
-            return imputations
-    
-    def plot_imputations(self):
-
-        '''
-        Plot the imputations.
-        
-        Returns:
-        __________________________________
-        go.Figure.
-        '''
-        
-        return plot(self.actual, self.imputations)
+            return imputed
 
 
 def build_fn(timesteps, features, units):

@@ -1,27 +1,28 @@
 # BRITS TensorFlow
 
-![license](https://img.shields.io/github/license/flaviagiammarino/brits-tensorflow?color=9b72e5)
-![languages](https://img.shields.io/github/languages/top/flaviagiammarino/brits-tensorflow?color=3672be)
+![license](https://img.shields.io/github/license/flaviagiammarino/brits-tensorflow)
+![languages](https://img.shields.io/github/languages/top/flaviagiammarino/brits-tensorflow)
 
 TensorFlow implementation of multivariate time series imputation model introduced in Cao, W., Wang, D., Li, J.,
 Zhou, H., Li, L. and Li, Y., 2018. BRITS: Bidirectional recurrent imputation for time series.
-*Advances in neural information processing systems*, 31. 
-[arXiv:1805.10572](https://arxiv.org/abs/1805.10572).
+*Advances in neural information processing systems*, 31.
 
 ## Dependencies
 ```bash
-pandas==1.4.3
-numpy==1.23.1
-tensorflow==2.9.1
-plotly==5.9.0
+pandas==1.5.2
+numpy==1.23.5
+tensorflow==2.11.0
+plotly==5.11.0
 kaleido==0.2.1
 ```
 ## Usage
 ```python
 import numpy as np
-from brits_tensorflow.model import BRITS
 
-# Generate two time series
+from brits_tensorflow.model import BRITS
+from brits_tensorflow.plots import plot
+
+# Generate some time series
 N = 2000
 t = np.linspace(0, 1, N)
 e = np.random.multivariate_normal(mean=np.zeros(2), cov=np.eye(2), size=N)
@@ -51,10 +52,11 @@ model.fit(
 )
 
 # Impute the missing values
-imputations = model.predict(x=x)
+x_hat = model.impute(x=x)
 
 # Plot the imputations
-fig = model.plot_imputations()
-fig.write_image('imputations.png', width=700, height=800)
+fig = plot(actual=x, imputed=x_hat)
+fig.write_image('results.png', scale=4, height=900, width=700)
+
 ```
-![imputations](example/imputations.png)
+![results](example/results.png)
