@@ -67,7 +67,8 @@ def plot(actual, imputed):
         fig.add_trace(
             go.Scatter(
                 y=actual[:, i],
-                showlegend=False,
+                showlegend=True if i == 0 else False,
+                name='Actual',
                 mode='lines',
                 connectgaps=False,
                 line=dict(
@@ -111,7 +112,8 @@ def plot(actual, imputed):
         fig.add_trace(
             go.Scatter(
                 y=imputed[:, i],
-                showlegend=False,
+                showlegend=True if i == 0 else False,
+                name='Imputed',
                 mode='lines',
                 line=dict(
                     width=1,
