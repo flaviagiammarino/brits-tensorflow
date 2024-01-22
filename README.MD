@@ -2,10 +2,16 @@
 
 ![license](https://img.shields.io/github/license/flaviagiammarino/brits-tensorflow)
 ![languages](https://img.shields.io/github/languages/top/flaviagiammarino/brits-tensorflow)
+![stars](https://img.shields.io/github/stars/flaviagiammarino/brits-tensorflow)
+![forks](https://img.shields.io/github/forks/flaviagiammarino/brits-tensorflow)
 
 TensorFlow implementation of multivariate time series imputation model introduced in Cao, W., Wang, D., Li, J.,
 Zhou, H., Li, L. and Li, Y., 2018. BRITS: Bidirectional recurrent imputation for time series.
 *Advances in neural information processing systems*, 31.
+
+<img src=diagram.png style="width:80%;margin-top:30px;margin-bottom:25px"/>
+
+*Model architecture (source: [NEURIPS 2018](https://proceedings.neurips.cc/paper_files/paper/2019/file/53c6de78244e9f528eb3e1cda69699bb-Paper.pdf))*
 
 ## Dependencies
 ```bash
