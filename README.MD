@@ -9,10 +9,6 @@ TensorFlow implementation of multivariate time series imputation model introduce
 Zhou, H., Li, L. and Li, Y., 2018. BRITS: Bidirectional recurrent imputation for time series.
 *Advances in neural information processing systems*, 31.
 
-<img src=diagram.png style="width:80%;margin-top:30px;margin-bottom:25px"/>
-
-*Model architecture (source: [NeurIPS 2018](https://proceedings.neurips.cc/paper_files/paper/2018/file/734e6bfcd358e25ac1db0a4241b95651-Paper.pdf))*
-
 ## Dependencies
 ```bash
 pandas==1.5.2
